@@ -1,22 +1,30 @@
 import java.util.Scanner;
 
 public class MineSweeper {
+    private int elementsNumbers;
+    private int safeNumbers;
  private int cols;
     private int rows;
     private int mines;
     Scanner in=new Scanner(System.in);
-
+    String[][] local;
+    String[][] mineLocal;
     public void startGame(){
+        boolean isLose=false;
     System.out.println("-------------!!Welcome My Minesweeper Game!!----------------");
         System.out.println("===========================");
-    System.out.print("Please enter the number of rows:");
-    rows=in.nextInt();
-    System.out.print("Please enter the number of columns:");
-    cols=in.nextInt();
-     int elementsNumbers = rows * cols;
-    mines= elementsNumbers /4;
-     String[][] local = defaultLocal();
-     String[][] mineLocal = mineLocal();
+
+    do{
+        System.out.print("Please enter the number of rows:");
+    rows=in.nextInt();}while(rows<=0);
+
+    do{System.out.print("Please enter the number of columns:");
+        cols=in.nextInt();}while(cols<=0);
+     elementsNumbers = rows * cols;
+    mines= elementsNumbers/4;
+    safeNumbers=elementsNumbers-mines;
+     local = defaultLocal();
+      mineLocal= mineLocal();
     mineLocation(mineLocal);
      int inCol;
      int inRow;
@@ -29,7 +37,8 @@ public class MineSweeper {
              }
              System.out.println();
          }
-
+         if(safeNumbers==0)
+             break;
      do {
          System.out.print("Please enter a row:");
          inRow =in.nextInt();
@@ -38,10 +47,12 @@ public class MineSweeper {
           System.out.print("Please enter a col:");
           inCol =in.nextInt();
       } while(inCol <0|| inCol >=cols);
+         safeNumbers--;
          System.out.println("===========================");
       if(mineLocal[inRow][inCol].equals("*")||mineLocal[inRow][inCol].equals("* "))
       {
           System.out.println("You Lose!");
+          isLose=true;
           break;
       }
       else {
@@ -62,9 +73,11 @@ public class MineSweeper {
            local[inRow][inCol]=Integer.toString(counter);
           else
               local[inRow][inCol]=counter+" ";
-      }
 
-  }while(mineLocal[inRow][inCol].equals("-")||mineLocal[inRow][inCol].equals("- "));
+      }
+  }while(safeNumbers>=0);
+     if(!isLose)
+        System.out.println("You Win!Congratulations!!!");
 
 }
 
